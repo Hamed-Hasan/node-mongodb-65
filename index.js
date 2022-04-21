@@ -31,26 +31,29 @@ async function run(){
 
       // data send to client side & create user
       app.post('/user', async (req, res) => {
-          const newUser = req.body
-          console.log('new user', newUser);
-          const result = await userCollection.insertOne(newUser);
-          res.send(result)
+         const newUser = req.body
+         console.log('new user', newUser);
+         const result = await userCollection.insertOne(newUser);
+         res.send(result);
       })
-    //   app.post('/user', async (req, res) => {
-    //     const newUser = req.body
-    //     console.log('user', newUser)
-    //     const result = await userCollection.insertOne(newUser)
-    //     res.send(result)
-    // })
 
         // data display in backend multiple
         app.get('/user', async (req, res) => {
             const query = {};
             const cursor = userCollection.find(query)
-            const result =  await cursor.toArray()
+            const result = await cursor.toArray()
             res.send(result)
+          
         })
   
+           // search particular a single user in backend
+           app.get('/user/:id', async (req, res) => {
+            const id = req.params.id
+            const query = {_id: ObjectId(id)}
+            const result = await userCollection.findOne(query);
+            res.send(result)
+        })
+
 
             // delete user from database
             app.delete('/user/:id', async (req, res) => {
@@ -61,16 +64,7 @@ async function run(){
         })
 
 
-            // search particular a single user in backend
-            app.get('/user/:id', async (req, res) => {
-                const id = req.params.id
-                const query = {_id: ObjectId(id)}
-                const result = await userCollection.findOne(query);
-                res.send(result)
-            })
-
-
-
+        
             // updateUser in client side 
             app.put('/user/:id', async (req, res) => {
                 const id = req.params.id
